@@ -18,7 +18,7 @@ For guides and documentations regarding the mod, click [here](docs/guide.md) to 
 Make sure your *PATH* environment included the directories of the required binaries before doing the build process.
 
 - Open your terminal.
-- Clone the project via `git clone https://git.home.arpa/bear_369/LogiStorage.git`
+- Clone the project via `git clone https://github.com/bearU369/LogiStorage.git`
 - Change directory to the project via `cd ./LogiStorage`
 - Run `gradle build` or `./gradlew build` to build the project.
 - Run `gradle runData` or `./gradlew runData` to generate data files for item recipes, loot tables, and other data.
