@@ -1,0 +1,11 @@
+{
+    "itemGroup.logistorage.creative_tab": "LogiStorage Tab",
+    "block.logistorage.me_interface": "ME Modem Interface",
+    "block.logistorage.me_processing_interface": "ME Processing Modem Interface",
+    "item.logistorage.me_interface": "ME Modem Interface",
+    "item.logistorage.me_processing_interface": "ME Processing Modem Interface",
+    "gui.logistorage.me_processing_interface.button.pattern": "Pattern Tab",
+    "gui.logistorage.me_processing_interface.button.pattern.tooltip": "Click to open the Pattern tab.",
+    "gui.logistorage.me_processing_interface.button.container": "Container Tab",
+    "gui.logistorage.me_processing_interface.button.container.tooltip": "Click to revert back to Container tab."
+}

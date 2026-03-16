@@ -1,0 +1,56 @@
+name: Release and Publish mod
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-forge:
+    uses: ./.gitea/workflows/build-forge.yaml
+  release:
+    needs:
+      - build-forge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Generate Changelog
+        id: changelog
+        run: |
+          # Get previous tag
+          PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
+          if [ -z "$PREVIOUS_TAG" ]; then
+            echo "changelog<<EOF" >> $GITHUB_OUTPUT
+            echo "## What's Changed" >> $GITHUB_OUTPUT
+            echo "" >> $GITHUB_OUTPUT
+            git log --pretty=format:"- %s (%h)" --no-merges >> $GITHUB_OUTPUT
+            echo "" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          else
+            echo "changelog<<EOF" >> $GITHUB_OUTPUT
+            echo "## What's Changed" >> $GITHUB_OUTPUT
+            echo "" >> $GITHUB_OUTPUT
+            git log ${PREVIOUS_TAG}..HEAD --pretty=format:"- %s (%h)" --no-merges >> $GITHUB_OUTPUT
+            echo "" >> $GITHUB_OUTPUT
+            echo "**Full Changelog**: ${{ github.server_url }}/${{ github.repository }}/compare/${PREVIOUS_TAG}...${{ github.ref_name }}" >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Download Artifacts
+        uses: christopherHX/gitea-download-artifact@v4
+        with:
+          path: ./build
+
+      - name: Publish into Gitea Release
+        uses: akkuman/gitea-release-action@v1
+        with:
+          name: "Release ${{ github.ref_name }}"
+          body: "${{ steps.changelog.outputs.changelog }}"
+          sha256sum: true
+          files: |
+            ./build/**

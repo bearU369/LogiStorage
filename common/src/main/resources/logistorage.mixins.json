@@ -1,0 +1,19 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "com.bear369.logistorage.mixin",
+    "refmap": "mixins.logistorage.refmap.json",
+    "compatibilityLevel": "JAVA_17",
+    "plugin": "com.bear369.logistorage.mixin.MixinConfig",
+    "mixins": [
+        "ae2.CraftingCPUClusterMixin",
+        "ae2.CraftingCpuLogicMixin",
+        "ae2.InterfaceLogicMixin",
+        "computercraft.FluidMethodsMixin",
+        "computercraft.InventoryMethodsMixin"
+    ],
+    "client": [],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "logistorage:block/me_processing_interface"
+    }
+}

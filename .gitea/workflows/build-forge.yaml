@@ -1,0 +1,44 @@
+name: Forge Workflow
+on:
+  workflow_call:
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      isProduction: true
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 21
+      
+      - name: Add privilege to Gradle
+        run: chmod +x gradlew
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v5.0.0
+        with:
+          gradle-version: '8.10.2'
+
+      - name: Build the mod's data files
+        run: ./gradlew forge:runData --info --no-parallel --max-workers=1 # Will remove this if I get a better hardware.
+
+      - name: Build the whole project
+        run: ./gradlew forge:build --info --no-parallel --max-workers=1 # Will remove this if I get a better hardware.
+
+      - name: Upload build artifact
+        uses: christopherHX/gitea-upload-artifact@v4
+        with:
+          name: forge-artifact
+          path: forge/build/libs/*.jar
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
+          overwrite: true

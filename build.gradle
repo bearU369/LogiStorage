@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+    id 'com.diffplug.spotless' version '8.3.0'
+}
+
+version = "${mod_version}"
+
+// Prevent root project from building its own jar
+jar {
+    enabled = false 
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'com.diffplug.spotless'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(17)
+        }
+    }
+
+    spotless {
+        java {
+            licenseHeaderFile(rootProject.file('license-header.txt'))
+            palantirJavaFormat('2.89.0')
+        }
+    }
+}

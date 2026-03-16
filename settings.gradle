@@ -1,0 +1,18 @@
+pluginManagement {
+    repositories {
+        maven {
+            name = "neoforge"
+            url = 'https://maven.neoforged.net/release'
+        }
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+rootProject.name = "${mod_name}"
+
+include 'common', 'forge'

@@ -1,0 +1,27 @@
+#IDE Files
+.vscode/
+.clinerules/
+.settings/
+
+.classpath
+.project
+*.launch
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Local Act-runners
+.runner
+.secrets
+act_runner
+config.yaml
+
+# Ignore Gradle build output directory
+bin/
+build/
+run/
+**/src/generated/*
+
+# Logs and Temp
+*.log
+*.tmp

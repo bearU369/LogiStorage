@@ -1,0 +1,158 @@
+plugins {
+    id 'net.neoforged.moddev.legacyforge' version '2.0.71'
+}
+
+repositories {
+    gradlePluginPortal()
+    mavenCentral() 
+    maven { 
+        url 'https://modmaven.dev/'
+        content {
+            includeGroup("appeng")
+        } 
+    }
+    maven {
+        url "https://maven.squiddev.cc"
+        content {
+            includeGroup("cc.tweaked")
+        }
+    }
+    maven { 
+        name = "CurseForge"
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+}
+
+dependencies {
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    modCompileOnly annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1")
+    modImplementation jarJar("io.github.llamalad7:mixinextras-forge:0.4.1")
+    modCompileOnly "cc.tweaked:cc-tweaked-${mcVersion}-common-api:${ccVersion}"
+    modCompileOnly "cc.tweaked:cc-tweaked-${mcVersion}-core-api:${ccVersion}"
+    modCompileOnly "cc.tweaked:cc-tweaked-${mcVersion}-forge-api:${ccVersion}"
+    modCompileOnly "cc.tweaked:cc-tweaked-${mcVersion}-forge:${ccVersion}"
+    modCompileOnly "appeng:appliedenergistics2-forge:${ae2Version}:api"
+    modCompileOnly "appeng:appliedenergistics2-forge:${ae2Version}"
+    
+    modRuntimeOnly "cc.tweaked:cc-tweaked-${mcVersion}-forge:${ccVersion}"
+    modRuntimeOnly "appeng:appliedenergistics2-forge:${ae2Version}"
+    modRuntimeOnly "org.appliedenergistics:guideme:${guidemeVersion}"
+
+    // Testing only
+    boolean isProductionBuild = System.getenv("isProduction") == 'true'
+    if (!isProductionBuild) {
+        modRuntimeOnly "curse.maven:ender-io-64578:7183516"
+        modRuntimeOnly "curse.maven:jei-238222:7270446"
+        modRuntimeOnly "curse.maven:gregtechceu-modern-890405:5641637"
+        // Gregtech CEu Modern's dependencies
+        modRuntimeOnly "curse.maven:configuration-444699:5840405"
+        modRuntimeOnly "curse.maven:ldlib-626676:6995785"
+    }
+}
+
+processResources {
+    exclude '**/.cache/**'
+    def replaceTargets = ['META-INF/mods.toml']
+    def replaceProperties = [
+        mod_id:                 mod_id,
+        mod_name:               mod_name,
+        mod_version:            mod_version,
+        mod_license:            mod_license,
+        mod_credits:            mod_credits,
+        mod_authors:            mod_authors,
+        mod_description:        mod_description,
+        forgeVersionRange:      forgeVersionRange,
+        mcVersionRange:         mcVersionRange,
+        ccVersionRange:         ccVersionRange,
+        ae2VersionRange:        ae2VersionRange,
+        guidemeVersionRange:    guidemeVersionRange,
+    ]
+    
+    inputs.properties replaceProperties
+    replaceProperties.put 'project', project
+
+    filesMatching(replaceTargets) {
+        expand replaceProperties
+    }
+}
+
+tasks.register('cleanData', Delete) {
+    delete file('src/generated/resources')
+}
+
+tasks.named('clean') {
+    dependsOn tasks.named('cleanData')
+}
+
+legacyForge {
+    version = "${mcVersion}-${forgeVersion}"
+
+    runs {
+        client {
+            client()
+        }
+        data {
+            data()
+            gameDirectory = project.file('run')
+            programArguments.addAll (
+                '--mod', "${mod_id}",
+                '--all',
+                '--output', file('src/generated/resources/').absolutePath,
+                '--existing', file('src/main/resources/').absolutePath
+            )
+        }
+
+        server {
+            server()
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+            sourceSet(project(':common').sourceSets.main)
+        }
+    }
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDir 'src/generated/resources'
+            srcDir project(':common').file('src/main/resources')
+            exclude '**/.cache/**'
+        }
+    }
+}
+
+jar {
+    archiveBaseName = "${mod_name}-${mcVersion}-Forge-${mod_version}"
+    manifest {
+        attributes([
+            "Specification-Title": "LogiStorage",
+            "Specification-Vendor": "${mod_authors}",
+            "Specification-Version": "1.0.0",
+            "Implementation-Title": "${mod_name}",
+            "Implementation-Version": project.version,
+            "Implementation-Vendor": "${mod_authors}",
+            "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+}
+
+mixin {
+    add sourceSets.main, 'mixins.logistorage.refmap.json'
+    config 'logistorage.mixins.json'
+}
+
+tasks.named("jar", Jar).configure {
+    finalizedBy('reobfJar')
+    exclude '**/.cache/**'
+
+    manifest.attributes([
+        "MixinConfigs": "${mod_id}.mixins.json"
+    ])
+}

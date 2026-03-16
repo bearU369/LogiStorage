@@ -1,0 +1,7 @@
+{
+    "variants": {
+        "": {
+            "model": "logistorage:block/me_processing_interface"
+        }
+    }
+}
