@@ -20,9 +20,9 @@ Make sure your *PATH* environment included the directories of the required binar
 - Open your terminal.
 - Clone the project via `git clone https://github.com/bearU369/LogiStorage.git`
 - Change directory to the project via `cd ./LogiStorage`
-- Run `gradle build` or `./gradlew build` to build the project.
-- Run `gradle runData` or `./gradlew runData` to generate data files for item recipes, loot tables, and other data.
-- Run `gradle runClient` or `./gradlew runClient` to test the mod, running Minecraft bundled with the mod and other mods within.
+- Run `gradle forge:build` or `./gradlew forge:build` to build the project.
+- Run `gradle forge:runData` or `./gradlew forge:runData` to generate data files for item recipes, loot tables, and other data.
+- Run `gradle forge:runClient` or `./gradlew forge:runClient` to test the mod, running Minecraft bundled with the mod and other mods within.
 
 ## License
 This project is licensed under multiple terms:
