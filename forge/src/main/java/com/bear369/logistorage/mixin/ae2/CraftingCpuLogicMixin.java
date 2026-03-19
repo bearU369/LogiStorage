@@ -106,6 +106,7 @@ public abstract class CraftingCpuLogicMixin implements ICraftingCpuLogic {
                 long targetAmount = getFinalJobOutput().amount();
 
                 peripheral.emitEventSignal(
+                        true,
                         success ? "crafting_process_complete" : "crafting_process_cancel",
                         itemID,
                         targetAmount,
@@ -150,7 +151,7 @@ public abstract class CraftingCpuLogicMixin implements ICraftingCpuLogic {
             } else {
                 String itemID = getFinalJobOutput().what().getId().toString();
                 long targetAmount = getFinalJobOutput().amount();
-                peripheral.emitEventSignal("crafting_process_start", itemID, targetAmount, triggeringSource);
+                peripheral.emitEventSignal(true, "crafting_process_start", itemID, targetAmount, triggeringSource);
 
                 activeProvider.add(patternProvider);
                 peripheral.beginPatternSend(details.getOutputs());

@@ -19,15 +19,21 @@ package com.bear369.logistorage.shared.computercraft.peripherial;
 
 import dan200.computercraft.api.peripheral.IComputerAccess;
 import dan200.computercraft.api.peripheral.IPeripheral;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
 public abstract class AbstractAttachedPeripherial implements IPeripheral {
     private Set<IComputerAccess> computers = new HashSet<>();
 
-    public void emitEventSignal(String event, Object... objects) {
+    public void emitEventSignal(boolean isNameAttached, String event, Object... objects) {
         for (IComputerAccess computer : computers) {
-            computer.queueEvent(event, objects);
+            Object[] args = Arrays.copyOf(objects, objects.length);
+            if (isNameAttached) {
+                args = Arrays.copyOf(args, args.length + 1);
+                args[args.length - 1] = computer.getAttachmentName();
+            }
+            computer.queueEvent(event, args);
         }
     }
 

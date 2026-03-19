@@ -61,7 +61,7 @@ public class MEProcessInterfacePeripherialLogic extends AbstractAttachedPeripher
             final GenericStackRecord record = new GenericStackRecord(stack);
             insertedList.add(record.toTable());
         }
-        super.emitEventSignal("crafting_process_preinsert", insertedList);
+        super.emitEventSignal(true, "crafting_process_preinsert", insertedList);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class MEProcessInterfacePeripherialLogic extends AbstractAttachedPeripher
             final GenericStackRecord record = new GenericStackRecord(insertedSlots.get(slot));
             insertedList.add(record.toTable(slot + 1)); // +1 for Lua-aligned indexing
         }
-        super.emitEventSignal("crafting_process_insert", insertedList);
+        super.emitEventSignal(true, "crafting_process_insert", insertedList);
     }
 
     @Override
@@ -83,25 +83,25 @@ public class MEProcessInterfacePeripherialLogic extends AbstractAttachedPeripher
             final GenericStackRecord record = new GenericStackRecord(stack);
             insertedList.add(record.toTable());
         }
-        super.emitEventSignal("crafting_process_postinsert", insertedList);
+        super.emitEventSignal(true, "crafting_process_postinsert", insertedList);
     }
 
     @Override
     public void onCraftingBegin(GenericStack stack, String triggeringSrc) {
         final GenericStackRecord record = new GenericStackRecord(stack);
-        super.emitEventSignal("crafting_start", record.name, record.amount, triggeringSrc);
+        super.emitEventSignal(true, "crafting_start", record.name, record.amount, triggeringSrc);
     }
 
     @Override
     public void onCraftingFinish(GenericStack stack, String triggeringSrc) {
         final GenericStackRecord record = new GenericStackRecord(stack);
-        super.emitEventSignal("crafting_complete", record.name, record.amount, triggeringSrc);
+        super.emitEventSignal(true, "crafting_complete", record.name, record.amount, triggeringSrc);
     }
 
     @Override
     public void onCraftingCancel(GenericStack stack, String triggeringSrc) {
         final GenericStackRecord record = new GenericStackRecord(stack);
-        super.emitEventSignal("crafting_cancel", record.name, record.amount, triggeringSrc);
+        super.emitEventSignal(true, "crafting_cancel", record.name, record.amount, triggeringSrc);
     }
 
     public IItemHandler getItemHandler() {
